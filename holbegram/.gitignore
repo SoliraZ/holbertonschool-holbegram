@@ -44,11 +44,17 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Firebase
+# Firebase / secrets (do not push — contain API keys or credentials)
 .firebase/
-android/app/google-services.json
+**/google-services.json
 **/GoogleService-Info.plist
+**/firebase_options.dart
 *-firebase-adminsdk-*.json
 serviceAccount*.json
+credentials.json
+**/credentials.json
 .env
 .env.*
+*.pem
+*.p12
+*.p8

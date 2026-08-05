@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "holbegram-405d0"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }
