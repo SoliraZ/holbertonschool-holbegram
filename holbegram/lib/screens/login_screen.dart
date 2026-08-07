@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../methods/auth_methods.dart';
 import '../widgets/text_field.dart';
 import 'signup_screen.dart';
 
@@ -13,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final AuthMethode _authMethode = AuthMethode();
   bool _passwordVisible = true;
 
   @override
@@ -26,6 +28,21 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void _login() async {
+    String res = await _authMethode.login(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    if (!mounted) return;
+    if (res == 'success') {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Login')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res)));
+    }
   }
 
   @override
@@ -87,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Color.fromARGB(218, 226, 37, 24),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: _login,
                       child: const Text(
                         'Log in',
                         style: TextStyle(color: Colors.white),
