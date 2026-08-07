@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Shown once, right after signup, so the new user can set a profile
 /// picture. Cloudinary is installed as a dependency but no account has
@@ -33,12 +34,11 @@ class UploadImageScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Holbegram',
-                style: TextStyle(
+                style: GoogleFonts.lobster(
                   fontSize: 32,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 4),

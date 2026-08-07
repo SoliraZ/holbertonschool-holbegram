@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
@@ -80,12 +81,11 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 24),
-                const Text(
+                Text(
                   'Holbegram',
-                  style: TextStyle(
+                  style: GoogleFonts.lobster(
                     fontSize: 36,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
                   ),
                 ),
                 const SizedBox(height: 4),

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'screens/login_screen.dart';
 import 'services/auth_service.dart';
@@ -63,7 +64,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Holbegram'),
+        title: Text('Holbegram', style: GoogleFonts.lobster()),
         actions: [
           IconButton(
             tooltip: 'Sign out',

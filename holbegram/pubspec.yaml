@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore: ^6.8.0
   firebase_database: ^12.4.7
   cloudinary_flutter: ^1.3.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
