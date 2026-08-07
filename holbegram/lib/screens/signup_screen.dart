@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
+import '../widgets/holberton_logo.dart';
 import '../widgets/text_field.dart';
 import 'upload_image_screen.dart';
 
@@ -89,7 +90,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Icon(Icons.mode_of_travel, color: Colors.red, size: 36),
+                const HolbertonLogo(size: 36),
                 const SizedBox(height: 16),
                 const Text(
                   'Sign up to see photos and videos\nfrom your friends.',

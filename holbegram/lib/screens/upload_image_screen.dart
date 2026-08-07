@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../widgets/holberton_logo.dart';
+
 /// Shown once, right after signup, so the new user can set a profile
 /// picture. Cloudinary is installed as a dependency but no account has
 /// been configured yet, so picking/uploading is a placeholder for now.
@@ -42,7 +44,7 @@ class UploadImageScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              const Icon(Icons.mode_of_travel, color: Colors.red, size: 32),
+              const HolbertonLogo(size: 56),
               const SizedBox(height: 24),
               Text(
                 'Hello, $displayName Welcome to Holbegram.',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../services/auth_service.dart';
+import '../widgets/holberton_logo.dart';
 import '../widgets/text_field.dart';
 import 'signup_screen.dart';
 
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Icon(Icons.mode_of_travel, color: Colors.red, size: 40),
+                const HolbertonLogo(size: 40),
                 const SizedBox(height: 32),
                 CustomTextField(
                   controller: _emailController,
