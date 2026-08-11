@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/text_field.dart';
-import 'login_screen.dart';
+import '../../methods/auth_methods.dart';
+import '../../widgets/text_field.dart';
+import 'signup_screen.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController passwordConfirmController =
-      TextEditingController();
+  final AuthMethode _authMethode = AuthMethode();
   bool _passwordVisible = true;
 
   @override
@@ -27,10 +26,23 @@ class _SignUpState extends State<SignUp> {
   @override
   void dispose() {
     emailController.dispose();
-    usernameController.dispose();
     passwordController.dispose();
-    passwordConfirmController.dispose();
     super.dispose();
+  }
+
+  void _login() async {
+    String res = await _authMethode.login(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    if (!mounted) return;
+    if (res == 'success') {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Login')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res)));
+    }
   }
 
   @override
@@ -55,11 +67,6 @@ class _SignUpState extends State<SignUp> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Sign up to see photos and videos\nfrom your friends.',
-                    textAlign: TextAlign.center,
-                  ),
                   const SizedBox(height: 28),
                   TextFieldInput(
                     controller: emailController,
@@ -69,36 +76,9 @@ class _SignUpState extends State<SignUp> {
                   ),
                   const SizedBox(height: 24),
                   TextFieldInput(
-                    controller: usernameController,
-                    ispassword: false,
-                    hintText: 'Full Name',
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: 24),
-                  TextFieldInput(
                     controller: passwordController,
                     ispassword: !_passwordVisible,
                     hintText: 'Password',
-                    keyboardType: TextInputType.visiblePassword,
-                    suffixIcon: IconButton(
-                      alignment: Alignment.bottomLeft,
-                      icon: Icon(
-                        _passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _passwordVisible = !_passwordVisible;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  TextFieldInput(
-                    controller: passwordConfirmController,
-                    ispassword: !_passwordVisible,
-                    hintText: 'Confirm Password',
                     keyboardType: TextInputType.visiblePassword,
                     suffixIcon: IconButton(
                       alignment: Alignment.bottomLeft,
@@ -124,9 +104,9 @@ class _SignUpState extends State<SignUp> {
                           const Color.fromARGB(218, 226, 37, 24),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: _login,
                       child: const Text(
-                        'Sign up',
+                        'Log in',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -135,24 +115,61 @@ class _SignUpState extends State<SignUp> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Have an account? '),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
+                      const Text('Forgot your login details? '),
+                      const Text(
+                        'Get help logging in',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Flexible(flex: 0, child: Container()),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  const Divider(thickness: 2),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account "),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SignUp(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Sign up',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(218, 226, 37, 24),
                             ),
-                          );
-                        },
-                        child: const Text(
-                          'Log in',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(218, 226, 37, 24),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Row(
+                    children: [
+                      Flexible(child: Divider(thickness: 2)),
+                      Text(' OR '),
+                      Flexible(child: Divider(thickness: 2)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png',
+                        width: 40,
+                        height: 40,
                       ),
+                      const Text('Sign in with Google'),
                     ],
                   ),
                 ],
