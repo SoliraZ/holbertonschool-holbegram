@@ -114,8 +114,15 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void _logout() {
-    _authService.signOut();
+  Future<void> _logout() async {
+    try {
+      await _authService.signOut();
+    } catch (err) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Logout failed: $err')));
+    }
   }
 }
 
