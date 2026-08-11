@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
+import 'providers/user_provider.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/home.dart';
 import 'services/auth_service.dart';
-import 'services/firestore_service.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,13 +19,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Holbegram',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => UserProvider(),
+      child: MaterialApp(
+        title: 'Holbegram',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+          useMaterial3: true,
+        ),
+        home: const AuthGate(),
       ),
-      home: const AuthGate(),
     );
   }
 }
@@ -44,58 +48,20 @@ class AuthGate extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
-          return HomeScreen(user: snapshot.data!);
+          return FutureBuilder(
+            future: context.read<UserProvider>().refreshUser(),
+            builder: (context, refreshSnapshot) {
+              if (refreshSnapshot.connectionState != ConnectionState.done) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              return const Home();
+            },
+          );
         }
         return const LoginScreen();
       },
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key, required this.user});
-
-  final User user;
-
-  @override
-  Widget build(BuildContext context) {
-    final auth = AuthService();
-    final firestore = FirestoreService();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Holbegram', style: GoogleFonts.lobster()),
-        actions: [
-          IconButton(
-            tooltip: 'Sign out',
-            onPressed: auth.signOut,
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: StreamBuilder(
-        stream: firestore.streamUserProfile(user.uid),
-        builder: (context, snapshot) {
-          final data = snapshot.data?.data();
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Signed in as ${user.email ?? user.uid}'),
-                  const SizedBox(height: 8),
-                  Text(
-                    data == null
-                        ? 'Loading Firestore profile…'
-                        : 'Firestore profile OK (uid: ${data['uid'] ?? user.uid})',
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 }
