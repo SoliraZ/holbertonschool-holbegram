@@ -81,11 +81,20 @@ class AuthMethode {
 
   Future<Users> getUserDetails() async {
     User currentUser = _auth.currentUser!;
+    final docRef = _firestore.collection('users').doc(currentUser.uid);
 
-    DocumentSnapshot documentSnapshot = await _firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .get();
+    DocumentSnapshot documentSnapshot = await docRef.get();
+
+    // Right after sign up, the Firestore profile is written a moment after
+    // the Firebase Auth account itself is created, so it may briefly not
+    // exist yet. Retry a few times before concluding it is really missing
+    // (e.g. deleted) instead of failing immediately.
+    int attempts = 0;
+    while (!documentSnapshot.exists && attempts < 6) {
+      await Future.delayed(const Duration(milliseconds: 400));
+      documentSnapshot = await docRef.get();
+      attempts++;
+    }
 
     if (!documentSnapshot.exists) {
       throw Exception(
