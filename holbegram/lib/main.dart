@@ -69,15 +69,21 @@ class _AuthGateState extends State<AuthGate> {
         }
 
         final user = snapshot.data;
+        debugPrint('AuthGate: stream emitted user=${user?.uid}');
         if (user == null) {
           _refreshedUid = null;
           _refreshFuture = null;
+          debugPrint('AuthGate: -> LoginScreen');
           return const LoginScreen();
         }
 
         return FutureBuilder<void>(
           future: _refreshFor(user.uid),
           builder: (context, refreshSnapshot) {
+            debugPrint(
+              'AuthGate: refreshSnapshot state=${refreshSnapshot.connectionState} '
+              'hasError=${refreshSnapshot.hasError}',
+            );
             if (refreshSnapshot.connectionState != ConnectionState.done) {
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
@@ -89,11 +95,15 @@ class _AuthGateState extends State<AuthGate> {
               // Sign out so the stream above emits null and routes back
               // to the login screen instead of crashing on a never
               // initialized user.
+              debugPrint(
+                'AuthGate: refresh failed (${refreshSnapshot.error}), signing out',
+              );
               _auth.signOut();
               return const Scaffold(
                 body: Center(child: CircularProgressIndicator()),
               );
             }
+            debugPrint('AuthGate: -> Home');
             return const Home();
           },
         );

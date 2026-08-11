@@ -115,9 +115,12 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _logout() async {
+    debugPrint('Profile: _logout tapped');
     try {
       await _authService.signOut();
+      debugPrint('Profile: signOut() completed');
     } catch (err) {
+      debugPrint('Profile: signOut() threw $err');
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
