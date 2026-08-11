@@ -15,7 +15,6 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   @override
   Widget build(BuildContext context) {
-    // ignore: unused_local_variable
     final currentUser = Provider.of<UserProvider>(context).getUser;
 
     return StreamBuilder(
@@ -31,6 +30,9 @@ class _PostsState extends State<Posts> {
           return ListView.builder(
             itemCount: data.length,
             itemBuilder: (context, index) {
+              final String postId = data[index]['postId'];
+              final bool isSaved = currentUser.saved.contains(postId);
+
               return SingleChildScrollView(
                 child: Container(
                   margin: EdgeInsetsGeometry.lerp(
@@ -115,8 +117,33 @@ class _PostsState extends State<Posts> {
                             ),
                             const Spacer(),
                             IconButton(
-                              icon: const Icon(Icons.bookmark_border),
-                              onPressed: () {},
+                              icon: Icon(
+                                isSaved
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_border,
+                              ),
+                              onPressed: () async {
+                                final userDoc = FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(currentUser.uid);
+
+                                if (isSaved) {
+                                  await userDoc.update({
+                                    'saved': FieldValue.arrayRemove([
+                                      postId,
+                                    ]),
+                                  });
+                                } else {
+                                  await userDoc.update({
+                                    'saved': FieldValue.arrayUnion([postId]),
+                                  });
+                                }
+
+                                if (!context.mounted) return;
+                                await context
+                                    .read<UserProvider>()
+                                    .refreshUser();
+                              },
                             ),
                           ],
                         ),
