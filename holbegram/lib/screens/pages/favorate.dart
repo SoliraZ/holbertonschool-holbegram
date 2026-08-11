@@ -40,13 +40,19 @@ class _FavoriteState extends State<Favorite> {
                 if (snapshot.hasData) {
                   var data = snapshot.data!.docs;
 
-                  return ListView.builder(
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(8),
                     itemCount: data.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      return Image.network(
-                        data[index]['postUrl'],
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          data[index]['postUrl'],
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       );
                     },
                   );
