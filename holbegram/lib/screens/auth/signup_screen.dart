@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/text_field.dart';
+import '../upload_image_screen.dart';
 import 'login_screen.dart';
 
 class SignUp extends StatefulWidget {
@@ -124,7 +125,18 @@ class _SignUpState extends State<SignUp> {
                           const Color.fromARGB(218, 226, 37, 24),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddPicture(
+                              email: emailController.text,
+                              username: usernameController.text,
+                              password: passwordController.text,
+                            ),
+                          ),
+                        );
+                      },
                       child: const Text(
                         'Sign up',
                         style: TextStyle(color: Colors.white),

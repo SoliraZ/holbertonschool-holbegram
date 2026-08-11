@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../methods/auth_methods.dart';
 import '../widgets/holberton_logo.dart';
 
 const String _defaultAvatarUrl =
@@ -28,6 +29,7 @@ class AddPicture extends StatefulWidget {
 }
 
 class _AddPictureState extends State<AddPicture> {
+  final AuthMethode _authMethode = AuthMethode();
   Uint8List? _image;
 
   void selectImageFromGallery() async {
@@ -56,8 +58,28 @@ class _AddPictureState extends State<AddPicture> {
     }
   }
 
-  void _next(BuildContext context) {
-    Navigator.of(context).popUntil((route) => route.isFirst);
+  void _next() async {
+    var email = widget.email;
+    var username = widget.username;
+    var password = widget.password;
+
+    String res = await _authMethode.signUpUser(
+      email: email,
+      password: password,
+      username: username,
+      file: _image,
+    );
+
+    if (!mounted) return;
+
+    if (res == 'success') {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('success')));
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(res)));
+    }
   }
 
   @override
@@ -124,7 +146,7 @@ class _AddPictureState extends State<AddPicture> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => _next(context),
+                  onPressed: _next,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(vertical: 14),
