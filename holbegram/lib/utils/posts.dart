@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
 import '../screens/pages/methods/post_storage.dart';
+import 'firestore_error.dart';
 
 class Posts extends StatefulWidget {
   const Posts({super.key});
@@ -21,7 +22,7 @@ class _PostsState extends State<Posts> {
       stream: FirebaseFirestore.instance.collection('posts').snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Error ${snapshot.error}'));
+          return buildStreamError(snapshot.error);
         }
 
         if (snapshot.hasData) {

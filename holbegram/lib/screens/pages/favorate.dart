@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
+import '../../utils/firestore_error.dart';
 
 class Favorite extends StatefulWidget {
   const Favorite({super.key});
@@ -34,7 +35,7 @@ class _FavoriteState extends State<Favorite> {
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error ${snapshot.error}'));
+                  return buildStreamError(snapshot.error);
                 }
 
                 if (snapshot.hasData) {

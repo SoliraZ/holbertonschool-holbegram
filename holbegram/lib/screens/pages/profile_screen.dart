@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
 import '../../services/auth_service.dart';
+import '../../utils/firestore_error.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -36,7 +37,7 @@ class _ProfileState extends State<Profile> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Error ${snapshot.error}'));
+            return buildStreamError(snapshot.error);
           }
 
           if (!snapshot.hasData) {
