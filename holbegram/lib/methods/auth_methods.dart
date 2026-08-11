@@ -87,6 +87,12 @@ class AuthMethode {
         .doc(currentUser.uid)
         .get();
 
+    if (!documentSnapshot.exists) {
+      throw Exception(
+        'No profile found for this account (it may have been deleted)',
+      );
+    }
+
     return Users.fromSnap(documentSnapshot);
   }
 }

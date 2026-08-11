@@ -56,6 +56,17 @@ class AuthGate extends StatelessWidget {
                   body: Center(child: CircularProgressIndicator()),
                 );
               }
+              if (refreshSnapshot.hasError) {
+                // The Firestore profile is missing (e.g. deleted) even
+                // though a Firebase Auth session is still cached locally.
+                // Sign out so the stream above emits null and routes back
+                // to the login screen instead of crashing on a never
+                // initialized user.
+                auth.signOut();
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
               return const Home();
             },
           );
