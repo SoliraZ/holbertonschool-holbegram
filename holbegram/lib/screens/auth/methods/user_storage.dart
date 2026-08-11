@@ -18,7 +18,9 @@ class StorageMethods {
     var request = http.MultipartRequest('POST', uri);
     request.fields['upload_preset'] = cloudinaryPreset;
     request.fields['folder'] = childName;
-    request.fields['public_id'] = isPost ? uniqueId : '';
+    if (isPost) {
+      request.fields['public_id'] = uniqueId;
+    }
 
     var multipartFile = http.MultipartFile.fromBytes(
       'file',
@@ -28,12 +30,14 @@ class StorageMethods {
     request.files.add(multipartFile);
 
     var response = await request.send();
+    var responseData = await response.stream.toBytes();
+    var jsonResponse = jsonDecode(String.fromCharCodes(responseData));
+
     if (response.statusCode == 200) {
-      var responseData = await response.stream.toBytes();
-      var jsonResponse = jsonDecode(String.fromCharCodes(responseData));
       return jsonResponse['secure_url'];
     } else {
-      throw Exception('Failed to upload image to Cloudinary');
+      final message = jsonResponse['error']?['message'] ?? 'Unknown error';
+      throw Exception('Failed to upload image to Cloudinary: $message');
     }
   }
 }
